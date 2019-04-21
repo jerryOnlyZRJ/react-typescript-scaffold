@@ -10,7 +10,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
 const localConfig = {
-  entry: path.join(__dirname, 'src/index.jsx'),
+  entry: path.join(__dirname, 'src/index.tsx'),
   output: {
     path: path.join(__dirname, './dist'),
     publicPath: '/',
@@ -19,7 +19,7 @@ const localConfig = {
   resolve: {
     extensions: ['ts', 'tsx', '.js'],
     alias: {
-      '@': path.resolve(__dirname, 'src')
+      '@': path.resolve(__dirname, './src')
     }
   },
   // webpack4压缩插件配置
@@ -51,37 +51,33 @@ const localConfig = {
   },
   module: {
     rules: [{
-      // css-loader
-      test: /\.css$/,
-      use: [
-        MiniCssExtractPlugin.loader,
-        'css-loader', {
-          loader: 'postcss-loader',
-          options: {
-            ident: 'postcss'
+        test: /\.css$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader', {
+            loader: 'postcss-loader',
+            options: {
+              ident: 'postcss'
+            }
           }
-        }
-      ]
-    }, {
-      // babel-loader  (ES6)
-      test: /\.jsx?$/,
-      exclude: /node_modules/,
-      use: {
-        loader: 'babel-loader',
+        ]
+      }, {
+        test: /\.tsx?$/,
+        loader: "awesome-typescript-loader"
+      },
+      {
+        enforce: "pre",
+        test: /\.js$/,
+        loader: ['source-map-loader', 'eslint-loader'],
+        exclude: /node_modules/
+      }, {
+        test: /\.(png|jpg|gif)$/,
+        use: [{
+          loader: 'file-loader',
+          options: {}
+        }]
       }
-    }, {
-      // eslint-loader
-      enforce: 'pre',
-      test: /\.(js|jsx)$/,
-      loader: 'eslint-loader',
-      exclude: /node_modules/
-    }, {
-      test: /\.(png|jpg|gif)$/,
-      use: [{
-        loader: 'file-loader',
-        options: {}
-      }]
-    }]
+    ]
   },
   plugins: [
     // 加入 html 模板任务
@@ -101,7 +97,11 @@ const localConfig = {
       verbose: true,
       dry: false
     }),
-  ]
+  ],
+  externals: {
+    "react": "React",
+    "react-dom": "ReactDOM"
+  }
 }
 
 module.exports = localConfig

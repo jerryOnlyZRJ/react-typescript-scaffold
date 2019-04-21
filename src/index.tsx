@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import '@/assets/styles/index.css'
-import Header from '@/components/Header/Header'
+import Header from '@/components/Header/index.tsx'
 
 export interface AppProps {
   user: string

@@ -17,9 +17,9 @@ const localConfig = {
     filename: 'scripts/[name]-[hash:5].js'
   },
   resolve: {
-    extensions: ['.jsx', '.js'],
+    extensions: ['ts', 'tsx', '.js'],
     alias: {
-      '@': path.resolve('src')
+      '@': path.resolve(__dirname, 'src')
     }
   },
   // webpack4压缩插件配置

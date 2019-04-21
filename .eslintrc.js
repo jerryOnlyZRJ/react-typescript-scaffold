@@ -13,7 +13,7 @@ module.exports = {
         "react/jsx-uses-react": 2,
         "react/jsx-uses-vars": 2,
         "react/react-in-jsx-scope": 2,
-        "indent": ["error", 4]
+        "indent": ["error", 2]
     },
     "plugins": [
         "react"

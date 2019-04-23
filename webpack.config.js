@@ -70,11 +70,6 @@ const localConfig = {
       {
         test: /\.tsx?$/,
         loader: 'awesome-typescript-loader',
-        options: {
-          useBabel: true,
-          babelCore: '@babel/core',
-          useCache: true,
-        },
       },
       {
         enforce: 'pre',

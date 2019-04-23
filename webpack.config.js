@@ -14,13 +14,14 @@ const localConfig = {
   output: {
     path: path.join(__dirname, './dist'),
     publicPath: '/',
-    filename: 'scripts/[name]-[hash:5].js'
+    filename: 'scripts/[name]-[hash:5].js',
   },
+  devtool: 'source-map',
   resolve: {
     extensions: ['ts', 'tsx', '.js'],
     alias: {
-      '@': path.resolve(__dirname, './src')
-    }
+      '@': path.resolve(__dirname, './src'),
+    },
   },
   // webpack4压缩插件配置
   optimization: {
@@ -28,56 +29,69 @@ const localConfig = {
       new UglifyJsPlugin({
         cache: true,
         parallel: true,
-        sourceMap: true // set to true if you want JS source maps
+        sourceMap: true, // set to true if you want JS source maps
       }),
-      new OptimizeCSSAssetsPlugin({})
+      new OptimizeCSSAssetsPlugin({}),
     ],
     splitChunks: {
       cacheGroups: {
-        vendor: { // 抽离第三方插件
+        vendor: {
+          // 抽离第三方插件
           test: /node_modules/, // 指定是node_modules下的第三方包
           chunks: 'initial',
           name: 'common/vendor', // 打包后的文件名，任意命名
-          priority: 10 // 设置优先级，防止和自定义的公共代码提取时被覆盖，不进行打包
+          priority: 10, // 设置优先级，防止和自定义的公共代码提取时被覆盖，不进行打包
         },
-        utils: { // 抽离自定义公共代码
+        utils: {
+          // 抽离自定义公共代码
           test: /\.js$/,
           chunks: 'initial',
           name: 'common/utils',
-          minSize: 0 // 只要超出0字节就生成一个新包
-        }
-      }
-    }
+          minSize: 0, // 只要超出0字节就生成一个新包
+        },
+      },
+    },
   },
   module: {
-    rules: [{
+    rules: [
+      {
         test: /\.css$/,
         use: [
           MiniCssExtractPlugin.loader,
-          'css-loader', {
+          'css-loader',
+          {
             loader: 'postcss-loader',
             options: {
-              ident: 'postcss'
-            }
-          }
-        ]
-      }, {
-        test: /\.tsx?$/,
-        loader: "awesome-typescript-loader"
+              ident: 'postcss',
+            },
+          },
+        ],
       },
       {
-        enforce: "pre",
+        test: /\.tsx?$/,
+        loader: 'awesome-typescript-loader',
+        options: {
+          useBabel: true,
+          babelCore: '@babel/core',
+          useCache: true,
+        },
+      },
+      {
+        enforce: 'pre',
         test: /\.js$/,
         loader: ['source-map-loader', 'eslint-loader'],
-        exclude: /node_modules/
-      }, {
+        exclude: /node_modules/,
+      },
+      {
         test: /\.(png|jpg|gif)$/,
-        use: [{
-          loader: 'file-loader',
-          options: {}
-        }]
-      }
-    ]
+        use: [
+          {
+            loader: 'file-loader',
+            options: {},
+          },
+        ],
+      },
+    ],
   },
   plugins: [
     // 加入 html 模板任务
@@ -85,23 +99,23 @@ const localConfig = {
       // 模板文件
       template: 'src/assets/index.html',
       // 打包后文件名称，会自动放到 output 指定的 dist 目录
-      filename: 'index.html'
+      filename: 'index.html',
     }),
     // 提取CSS
     new MiniCssExtractPlugin({
       filename: 'styles/[name]-[hash:5].css',
-      chunkFilename: 'styles/[id]-[hash:5].css'
+      chunkFilename: 'styles/[id]-[hash:5].css',
     }),
     new CleanWebpackPlugin('dist/*', {
       root: __dirname,
       verbose: true,
-      dry: false
+      dry: false,
     }),
   ],
   externals: {
-    "react": "React",
-    "react-dom": "ReactDOM"
-  }
+    react: 'React',
+    'react-dom': 'ReactDOM',
+  },
 }
 
 module.exports = localConfig

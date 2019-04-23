@@ -1,11 +1,14 @@
 #node_modules
 node_modules/
 
-# node_modules
-node_modules/
+#cache-loader
+.cache-loader/
 
 #logs & docs
 logs/
 
 # dist
 dist/
+
+# awesome-typescript-loader's cache
+.awcache/
